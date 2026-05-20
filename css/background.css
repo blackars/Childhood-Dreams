@@ -1,0 +1,42 @@
+.particle-background {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background: #000000;
+  transition:
+    background-color 4.5s cubic-bezier(0.65, 0, 0.35, 1),
+    filter 4.5s cubic-bezier(0.65, 0, 0.35, 1);
+}
+.particle-background img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  transform-origin: center;
+  transition:
+    filter 4.5s cubic-bezier(0.65, 0, 0.35, 1),
+    transform 4.5s cubic-bezier(0.65, 0, 0.35, 1),
+    opacity 1.2s ease;
+}
+body.second-screen-active .particle-background {
+  background-color: #ffffff;
+}
+body.second-screen-active .particle-background img {
+  filter: invert(1);
+  transform: scale(1.045);
+}
+body.intro-playing:not(.particles-visible) .particle-background {
+  opacity: 0;
+  visibility: hidden;
+}
+body.particles-visible .particle-background {
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity 1.2s cubic-bezier(0.65, 0, 0.35, 1),
+    filter 4.5s cubic-bezier(0.65, 0, 0.35, 1),
+    background-color 4.5s cubic-bezier(0.65, 0, 0.35, 1);
+}

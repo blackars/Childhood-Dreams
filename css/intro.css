@@ -1,0 +1,215 @@
+.intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  background: #000000;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 1;
+  transition:
+    opacity 1.1s cubic-bezier(0.65, 0, 0.35, 1),
+    background-color 1.1s cubic-bezier(0.65, 0, 0.35, 1);
+}
+body.intro-idle .intro-overlay {
+  pointer-events: auto;
+}
+.intro-core {
+  position: absolute;
+  width: clamp(80px, 11vw, 140px);
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background: #ffffff;
+  transform-origin: center;
+  animation: introBreathExplode 6s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+  box-shadow: none;
+  cursor: pointer;
+}
+body.intro-idle .intro-core {
+  animation: none;
+}
+.intro-core::before {
+  content: "";
+  position: absolute;
+  inset: -38%;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.32) 0%,
+    rgba(255, 255, 255, 0.38) 35%,
+    rgba(255, 255, 255, 0.06) 58%,
+    transparent 72%
+  );
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.75;
+}
+body.intro-idle .intro-core::before {
+  animation: haloPulse 2s infinite;
+}
+.intro-shockwave {
+  position: absolute;
+  width: clamp(90px, 13vw, 160px);
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.55);
+  opacity: 0;
+  transform: scale(0.4);
+  filter: blur(3px);
+  box-shadow:
+    0 0 18px rgba(255, 255, 255, 0.35),
+    0 0 42px rgba(255, 255, 255, 0.16);
+  animation: introShockwave 6s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+body.intro-idle .intro-shockwave {
+  animation: none;
+}
+.intro-burst-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.intro-burst-particles span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: calc(4px * var(--s));
+  height: calc(4px * var(--s));
+  border-radius: 50%;
+  background: #ffffff;
+  opacity: 0;
+  box-shadow:
+    0 0 10px rgba(255, 255, 255, 0.9),
+    0 0 22px rgba(255, 255, 255, 0.45);
+  transform: translate(-50%, -50%) scale(0);
+  animation: introParticleBurst 1.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: calc(5.35s + var(--d));
+}
+body.intro-idle .intro-burst-particles span {
+  animation: none;
+}
+.intro-hint {
+  position: absolute;
+  bottom: 20%;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: clamp(0.9rem, 2vw, 1.1rem);
+  letter-spacing: 0.05em;
+}
+body.intro-idle .intro-hint {
+  opacity: 1;
+}
+body.intro-playing .intro-hint,
+body.intro-fadeout .intro-hint,
+body.title-visible .intro-hint {
+  opacity: 0;
+}
+body.intro-fadeout .intro-overlay {
+  opacity: 0;
+  background-color: transparent;
+}
+@keyframes introBreathExplode {
+  0% {
+    transform: scale(0.62);
+    opacity: 0;
+  }
+  8% {
+    transform: scale(0.78);
+    opacity: 1;
+  }
+  18% {
+    transform: scale(1.03);
+    opacity: 1;
+  }
+  28% {
+    transform: scale(0.88);
+    opacity: 0.96;
+  }
+  38% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+  48% {
+    transform: scale(0.9);
+    opacity: 0.96;
+  }
+  58% {
+    transform: scale(1.12);
+    opacity: 1;
+  }
+  68% {
+    transform: scale(0.92);
+    opacity: 0.98;
+  }
+  78% {
+    transform: scale(1.18);
+    opacity: 1;
+  }
+  86% {
+    transform: scale(0.96);
+    opacity: 1;
+  }
+  93% {
+    transform: scale(1.32);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(24);
+    opacity: 0;
+  }
+}
+@keyframes introShockwave {
+  0%,
+  86% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  93% {
+    opacity: 0.7;
+    transform: scale(1.15);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(10);
+  }
+}
+@keyframes introParticleBurst {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0);
+  }
+  18% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.85;
+    transform:
+      translate(
+        calc(-50% + var(--x)),
+        calc(-50% + var(--y))
+      )
+      scale(1);
+  }
+}
+@keyframes introTitleReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(22px) scale(0.96);
+    filter: blur(12px);
+  }
+  100% {
+    opacity: 0.82;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+@keyframes haloPulse {
+  0%, 100% {
+    opacity: 0.75;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.05);
+  }
+}

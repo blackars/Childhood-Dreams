@@ -1,0 +1,117 @@
+.content {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  color: #ffffff;
+  text-align: center;
+  padding: 2rem;
+  transition:
+    opacity 1s ease,
+    transform 1s cubic-bezier(0.65, 0, 0.35, 1);
+}
+.content-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+.animated-title {
+  display: inline-block;
+  margin: 0;
+  font-size: clamp(3rem, 10vw, 8rem);
+  font-weight: 950;
+  line-height: 0.9;
+  letter-spacing: -0.08em;
+  text-transform: uppercase;
+  color: white;
+  -webkit-text-stroke: 2px rgba(255, 255, 255, 0.92);
+  text-stroke: 2px rgba(255, 255, 255, 0.92);
+  cursor: pointer;
+  user-select: none;
+  outline: none;
+  opacity: 0.82;
+  animation: titleFade 4.5s ease-in-out infinite;
+  transition:
+    color 0.4s ease,
+    -webkit-text-stroke-color 0.4s ease,
+    text-shadow 0.4s ease,
+    transform 0.45s cubic-bezier(0.65, 0, 0.35, 1),
+    opacity 0.45s ease,
+    filter 0.45s ease,
+    visibility 0s linear;
+}
+.animated-title:hover,
+.animated-title:focus-visible {
+  color: #ffffff;
+  -webkit-text-stroke-color: #ffffff;
+  text-stroke-color: #ffffff;
+  opacity: 1;
+  transform: scale(1.035);
+  text-shadow:
+    0 0 12px rgba(255, 255, 255, 0.4),
+    0 0 34px rgba(255, 255, 255, 0.2);
+  animation-play-state: paused;
+}
+.animated-title:active {
+  transform: scale(0.975);
+}
+.subtitle {
+  margin: 0;
+  max-width: 620px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: clamp(0.95rem, 2vw, 1.15rem);
+  line-height: 1.6;
+  transition:
+    opacity 0.9s ease,
+    transform 0.9s cubic-bezier(0.65, 0, 0.35, 1),
+    filter 0.9s ease;
+}
+@keyframes titleFade {
+  0% {
+    opacity: 0.78;
+    filter: blur(0.15px);
+  }
+  50% {
+    opacity: 1;
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 0.78;
+    filter: blur(0.15px);
+  }
+}
+body.intro-playing .animated-title {
+  opacity: 0 !important;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(20px) scale(0.96);
+  filter: blur(12px);
+  animation: none !important;
+}
+body.intro-playing .content {
+  pointer-events: none;
+}
+body.title-visible:not(.second-screen-active) .animated-title {
+  visibility: visible !important;
+  opacity: 0.82 !important;
+  pointer-events: auto !important;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+  animation:
+    introTitleReveal 2.2s cubic-bezier(0.65, 0, 0.35, 1) forwards,
+    titleFade 6s ease-in-out 2.2s infinite !important;
+}
+body.second-screen-active .animated-title,
+body.second-screen-active.title-visible .animated-title {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transform: scale(0.84) translateY(-30px) !important;
+  filter: blur(12px) !important;
+  animation: none !important;
+}
+body.title-visible .content {
+  pointer-events: auto;
+}
