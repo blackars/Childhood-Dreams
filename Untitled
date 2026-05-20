@@ -1,0 +1,8 @@
+stateDiagram-v2
+    [*] --> IntroIdle: carga
+    IntroIdle --> IntroPlaying: click círculo
+    IntroPlaying --> Hub: animación fin
+    Hub --> BookGrid: click título
+    BookGrid --> GameEmbed: click tarjeta
+    GameEmbed --> BookGrid: volver / Escape
+    BookGrid --> Hub: Escape (ya parcial)
