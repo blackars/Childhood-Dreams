@@ -5,12 +5,30 @@
   opacity: 0;
   pointer-events: none;
   background: transparent;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
   transition:
     opacity 1.2s cubic-bezier(0.65, 0, 0.35, 1);
 }
+.second-screen::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  background: transparent;
+}
+.second-screen::-webkit-scrollbar-thumb {
+  background: transparent;
+}
 .second-screen-content {
   width: 100%;
+  min-height: 100dvh;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: clamp(1.5rem, 4vw, 4rem);
+  box-sizing: border-box;
 }
 body.second-screen-active .second-screen {
   opacity: 1;
@@ -18,6 +36,10 @@ body.second-screen-active .second-screen {
 }
 .books-grid {
   width: min(92vw, 980px);
+  max-width: 100%;
+  margin-inline: auto;
+  margin-block: auto;
+  flex-shrink: 0;
   display: grid;
   grid-template-columns: repeat(2, minmax(220px, 1fr));
   gap: clamp(1.5rem, 4vw, 3.5rem);

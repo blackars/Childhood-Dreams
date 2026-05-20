@@ -3,14 +3,11 @@
     grid-template-columns: 1fr;
     width: min(92vw, 420px);
     gap: 1.2rem;
-    padding-block: 3rem;
-  }
-  .second-screen {
-    overflow-y: auto;
+    padding-block: 1rem;
   }
   .second-screen-content {
-    min-height: auto;
-    align-items: start;
+    padding-top: max(clamp(1.5rem, 4vw, 4rem), env(safe-area-inset-top, 0px));
+    padding-bottom: max(clamp(1.5rem, 4vw, 4rem), env(safe-area-inset-bottom, 0px));
   }
   .book-card {
     min-height: 210px;
