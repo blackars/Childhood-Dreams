@@ -115,3 +115,7 @@ body.second-screen-active.title-visible .animated-title {
 body.title-visible .content {
   pointer-events: auto;
 }
+body.second-screen-active .content {
+  pointer-events: none;
+  visibility: hidden;
+}

@@ -1,19 +1,19 @@
 @media (max-width: 720px) {
   .books-grid {
     grid-template-columns: 1fr;
-    width: min(92vw, 420px);
-    gap: 1.2rem;
+    width: min(85vw, 320px);
+    gap: 2rem;
     padding-block: 1rem;
   }
   .second-screen-content {
-    padding-top: max(clamp(1.5rem, 4vw, 4rem), env(safe-area-inset-top, 0px));
-    padding-bottom: max(clamp(1.5rem, 4vw, 4rem), env(safe-area-inset-bottom, 0px));
+    padding-top: max(clamp(2rem, 5vw, 4rem), env(safe-area-inset-top, 0px));
+    padding-bottom: max(clamp(2rem, 5vw, 4rem), env(safe-area-inset-bottom, 0px));
   }
   .book-card {
-    min-height: 210px;
+    min-height: 200px;
   }
   .book-media {
-    width: min(58%, 170px);
+    width: min(50%, 160px);
   }
 }
 @media (hover: none) {
