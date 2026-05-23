@@ -1,33 +1,12 @@
-/* Móvil: 1 columna, scroll, tarjetas tamaño fijo razonable (no pantalla completa) */
-@media (max-width: 720px) {
+/* Móvil: scroll en la segunda pantalla */
+@media (max-width: 767px) {
   body.second-screen-active .second-screen {
     overflow-y: auto;
   }
   .second-screen-content {
-    height: auto;
-    min-height: 100dvh;
-    min-height: 100vh;
     justify-content: flex-start;
-    overflow: visible;
-  }
-  .second-screen {
-    --book-size: min(72vw, 200px);
-    --name-height: clamp(1rem, 4vw, 1.5rem);
-    --grid-gap: clamp(1.25rem, 5vw, 2rem);
-  }
-  .books-grid {
-    grid-template-columns: var(--book-size);
-    grid-template-rows: none;
-    auto-rows: calc(var(--book-size) + var(--name-height));
-    width: var(--book-size);
-    height: auto;
-    max-height: none;
-    margin-block: auto;
-    padding-block: clamp(1rem, 4dvh, 2rem);
-  }
-  .book-card {
-    width: var(--book-size);
-    height: calc(var(--book-size) + var(--name-height));
+    padding-top: max(1.5rem, env(safe-area-inset-top, 0px));
+    padding-bottom: max(2rem, env(safe-area-inset-bottom, 0px));
   }
 }
 
@@ -37,12 +16,8 @@
   }
   .book-card:active .book-media video {
     transform: scale(1.06) rotate(-1deg);
-    filter:
-      drop-shadow(0 26px 34px rgba(0, 0, 0, 0.28))
-      contrast(1.12);
   }
   .book-card:active .book-name {
     opacity: 1;
-    transform: translateY(2px);
   }
 }
