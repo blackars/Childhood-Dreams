@@ -12,6 +12,22 @@
   touch-action: pan-y;
   -ms-overflow-style: none;
   scrollbar-width: none;
+  /* Escala fluida según viewport (2×2 desktop) */
+  --pad-block: clamp(0.75rem, 3.5dvh, 3rem);
+  --pad-inline: clamp(0.75rem, 4vw, 3rem);
+  --grid-gap: clamp(0.5rem, 2vmin, 2.5rem);
+  --name-height: clamp(1.1rem, 3.2dvh, 2.25rem);
+  --area-w: calc(
+    100vw - 2 * var(--pad-inline) - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)
+  );
+  --area-h: calc(
+    100dvh - 2 * var(--pad-block) - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)
+  );
+  --cell-w: calc((var(--area-w) - var(--grid-gap)) / 2);
+  --cell-h: calc((var(--area-h) - var(--grid-gap) - 2 * var(--name-height)) / 2);
+  --book-size: min(var(--cell-w) * 0.9, var(--cell-h) * 0.85, 360px);
+  --book-size: max(var(--book-size), 64px);
+  --float-offset: calc(var(--book-size) * 0.08);
   transition:
     opacity 1.2s cubic-bezier(0.65, 0, 0.35, 1);
 }
@@ -33,9 +49,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: clamp(2rem, 5vh, 5rem);
-  padding-top: max(clamp(2rem, 5vh, 5rem), env(safe-area-inset-top, 0px));
-  padding-bottom: max(clamp(2rem, 5vh, 5rem), env(safe-area-inset-bottom, 0px));
+  padding: var(--pad-block) var(--pad-inline);
+  padding-top: max(var(--pad-block), env(safe-area-inset-top, 0px));
+  padding-bottom: max(var(--pad-block), env(safe-area-inset-bottom, 0px));
   box-sizing: border-box;
 }
 body.second-screen-active {
@@ -47,14 +63,14 @@ body.second-screen-active .second-screen {
   overflow-y: auto;
 }
 .books-grid {
-  width: min(90vw, 900px);
+  width: min(calc(var(--book-size) * 2 + var(--grid-gap)), var(--area-w));
   max-width: 100%;
   margin-block: auto;
   flex-shrink: 0;
   display: grid;
-  grid-template-columns: repeat(2, minmax(180px, 1fr));
-  gap: clamp(2rem, 5vw, 4rem);
+  grid-template-columns: repeat(2, var(--book-size));
   justify-content: center;
+  gap: var(--grid-gap);
   align-content: start;
   opacity: 0;
   transform: translateY(40px) scale(0.96);
@@ -76,8 +92,10 @@ body.second-screen-active .books-grid {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: clamp(210px, 28vw, 320px);
-  padding: clamp(1.2rem, 3vw, 2rem);
+  width: var(--book-size);
+  max-width: 100%;
+  min-height: calc(var(--book-size) + var(--name-height));
+  padding: clamp(0.25rem, 1.2vmin, 1rem);
   text-decoration: none;
   color: transparent;
   border: none;
@@ -133,12 +151,15 @@ body.second-screen-active .book-card-4 {
 }
 .book-media {
   position: relative;
-  width: min(70%, 220px);
+  width: calc(var(--book-size) * 0.88);
+  height: calc(var(--book-size) * 0.88);
+  max-width: 100%;
   aspect-ratio: 1 / 1;
   display: grid;
   place-items: center;
-  margin-bottom: 1.1rem;
+  margin-bottom: clamp(0.2rem, 1dvh, 0.65rem);
   z-index: 1;
+  flex-shrink: 0;
 }
 .book-media video {
   width: 100%;
@@ -161,7 +182,11 @@ body.second-screen-active .book-card-4 {
 .book-name {
   position: relative;
   z-index: 1;
-  font-size: clamp(1rem, 2.2vw, 1.45rem);
+  width: 100%;
+  max-width: var(--book-size);
+  font-size: clamp(0.65rem, calc(var(--book-size) * 0.1), 1.5rem);
+  line-height: 1.15;
+  text-align: center;
   font-weight: 800;
   letter-spacing: -0.04em;
   text-transform: uppercase;
@@ -179,19 +204,34 @@ body.second-screen-active .book-card-4 {
 }
 @keyframes floatBookOne {
   0%, 100% { translate: 0 0; }
-  50% { translate: 0 -12px; }
+  50% { translate: 0 calc(var(--float-offset) * -1); }
 }
 @keyframes floatBookTwo {
   0%, 100% { translate: 0 0; }
-  50% { translate: 8px -16px; }
+  50% { translate: var(--float-offset) calc(var(--float-offset) * -1.3); }
 }
 @keyframes floatBookThree {
   0%, 100% { translate: 0 0; }
-  50% { translate: -8px -14px; }
+  50% { translate: calc(var(--float-offset) * -1) calc(var(--float-offset) * -1.15); }
 }
 @keyframes floatBookFour {
   0%, 100% { translate: 0 0; }
-  50% { translate: 6px -10px; }
+  50% { translate: calc(var(--float-offset) * 0.75) calc(var(--float-offset) * -0.85); }
+}
+/* Pantallas muy anchas: un poco más de aprovechamiento */
+@media (min-width: 1400px) and (min-height: 800px) {
+  .second-screen {
+    --book-size: min(var(--cell-w) * 0.92, var(--cell-h) * 0.88, 420px);
+  }
+}
+/* Landscape bajo: reducir para que quepan 2 filas sin scroll excesivo */
+@media (max-height: 520px) and (orientation: landscape) {
+  .second-screen {
+    --pad-block: clamp(0.5rem, 2dvh, 1.25rem);
+    --name-height: clamp(0.9rem, 2.5dvh, 1.5rem);
+    --book-size: min(var(--cell-w) * 0.82, var(--cell-h) * 0.78, 200px);
+    --book-size: max(var(--book-size), 48px);
+  }
 }
 body.second-screen-active .animated-title {
   opacity: 0;

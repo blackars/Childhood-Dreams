@@ -1,19 +1,27 @@
+/* Móvil: 1 columna, libros escalan con altura disponible (4 filas) */
 @media (max-width: 720px) {
-  .books-grid {
-    grid-template-columns: 1fr;
-    width: min(85vw, 320px);
-    gap: 2rem;
-    padding-block: 1rem;
+  .second-screen {
+    --cell-h: calc(
+      (var(--area-h) - 3 * var(--grid-gap) - 4 * var(--name-height)) / 4
+    );
+    --book-size: min(var(--area-w) * 0.72, var(--cell-h) * 0.82, 280px);
+    --book-size: max(var(--book-size), 56px);
   }
-  .second-screen-content {
-    padding-top: max(clamp(2rem, 5vw, 4rem), env(safe-area-inset-top, 0px));
-    padding-bottom: max(clamp(2rem, 5vw, 4rem), env(safe-area-inset-bottom, 0px));
+  .books-grid {
+    grid-template-columns: var(--book-size);
+    width: min(var(--book-size), var(--area-w));
   }
   .book-card {
-    min-height: 200px;
+    min-height: calc(var(--book-size) + var(--name-height));
   }
-  .book-media {
-    width: min(50%, 160px);
+}
+/* Móvil muy bajo (landscape phone) */
+@media (max-width: 720px) and (max-height: 480px) {
+  .second-screen {
+    --pad-block: clamp(0.4rem, 2dvh, 1rem);
+    --name-height: clamp(0.85rem, 2.2dvh, 1.35rem);
+    --book-size: min(var(--area-w) * 0.58, var(--cell-h) * 0.75, 160px);
+    --book-size: max(var(--book-size), 44px);
   }
 }
 @media (hover: none) {
