@@ -12,33 +12,32 @@
   touch-action: pan-y;
   -ms-overflow-style: none;
   scrollbar-width: none;
-  /* Escala fluida según viewport (2×2 desktop) */
-  --pad-block: clamp(0.75rem, 3.5dvh, 3rem);
-  --pad-inline: clamp(0.75rem, 4vw, 3rem);
-  --grid-gap: clamp(0.5rem, 2vmin, 2.5rem);
-  --name-height: clamp(1.1rem, 3.2dvh, 2.25rem);
+  --pad-block: clamp(0.75rem, 3dvh, 2.5rem);
+  --pad-inline: clamp(0.75rem, 3vw, 2.5rem);
+  --grid-gap: clamp(0.5rem, 2vmin, 2rem);
+  --name-height: clamp(1rem, 2.8dvh, 1.75rem);
   --area-w: calc(
     100vw - 2 * var(--pad-inline) - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)
   );
   --area-h: calc(
     100dvh - 2 * var(--pad-block) - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)
   );
-  --cell-w: calc((var(--area-w) - var(--grid-gap)) / 2);
-  --cell-h: calc((var(--area-h) - var(--grid-gap) - 2 * var(--name-height)) / 2);
-  --book-size: min(var(--cell-w) * 0.9, var(--cell-h) * 0.85, 360px);
-  --book-size: max(var(--book-size), 64px);
-  --float-offset: calc(var(--book-size) * 0.08);
+  /* Desktop: 2×2 que cabe entero en el viewport */
+  --book-size: min(
+    calc((var(--area-w) - var(--grid-gap)) / 2),
+    calc((var(--area-h) - var(--grid-gap) - 2 * var(--name-height)) / 2)
+  );
+  --book-size: max(var(--book-size), 48px);
+  --float-offset: calc(var(--book-size) * 0.06);
   transition:
     opacity 1.2s cubic-bezier(0.65, 0, 0.35, 1);
 }
 .second-screen::-webkit-scrollbar {
-  width: 0px;
-  height: 0px;
+  width: 0;
+  height: 0;
   background: transparent;
 }
-.second-screen::-webkit-scrollbar-track {
-  background: transparent;
-}
+.second-screen::-webkit-scrollbar-track,
 .second-screen::-webkit-scrollbar-thumb {
   background: transparent;
   border: none;
@@ -49,6 +48,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   padding: var(--pad-block) var(--pad-inline);
   padding-top: max(var(--pad-block), env(safe-area-inset-top, 0px));
   padding-bottom: max(var(--pad-block), env(safe-area-inset-bottom, 0px));
@@ -60,18 +60,33 @@ body.second-screen-active {
 body.second-screen-active .second-screen {
   opacity: 1;
   pointer-events: auto;
-  overflow-y: auto;
+}
+/* Desktop: grid 2×2 fijo, sin scroll — todo visible en viewport */
+@media (min-width: 721px) {
+  body.second-screen-active .second-screen {
+    overflow: hidden;
+  }
+  .second-screen-content {
+    height: 100dvh;
+    height: 100vh;
+    min-height: 100dvh;
+    min-height: 100vh;
+    overflow: hidden;
+  }
 }
 .books-grid {
-  width: min(calc(var(--book-size) * 2 + var(--grid-gap)), var(--area-w));
-  max-width: 100%;
-  margin-block: auto;
-  flex-shrink: 0;
   display: grid;
   grid-template-columns: repeat(2, var(--book-size));
-  justify-content: center;
+  grid-template-rows: repeat(2, calc(var(--book-size) + var(--name-height)));
   gap: var(--grid-gap);
-  align-content: start;
+  width: calc(var(--book-size) * 2 + var(--grid-gap));
+  height: calc(var(--book-size) * 2 + var(--grid-gap) + 2 * var(--name-height));
+  max-width: var(--area-w);
+  max-height: var(--area-h);
+  margin: auto;
+  flex-shrink: 0;
+  justify-content: center;
+  align-content: center;
   opacity: 0;
   transform: translateY(40px) scale(0.96);
   filter: blur(10px);
@@ -91,28 +106,21 @@ body.second-screen-active .books-grid {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   width: var(--book-size);
-  max-width: 100%;
-  min-height: calc(var(--book-size) + var(--name-height));
-  padding: clamp(0.25rem, 1.2vmin, 1rem);
+  height: calc(var(--book-size) + var(--name-height));
+  padding: 0;
   text-decoration: none;
   color: transparent;
   border: none;
   background: transparent;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  box-shadow: none;
   overflow: visible;
   cursor: pointer;
   opacity: 0;
   transform: translateY(35px) scale(0.95);
   transition:
     opacity 0.9s cubic-bezier(0.65, 0, 0.35, 1),
-    transform 0.45s cubic-bezier(0.65, 0, 0.35, 1),
-    border-color 0.35s ease,
-    background-color 0.35s ease,
-    box-shadow 0.35s ease;
+    transform 0.45s cubic-bezier(0.65, 0, 0.35, 1);
 }
 body.second-screen-active .book-card {
   opacity: 1;
@@ -139,27 +147,18 @@ body.second-screen-active .book-card-4 {
   content: none;
 }
 .book-card:hover {
-  transform: translateY(-10px) scale(1.035);
-  border-color: rgba(0, 0, 0, 0.42);
-  background: rgba(255, 255, 255, 0.58);
-  box-shadow:
-    0 32px 90px rgba(0, 0, 0, 0.16),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.65);
+  transform: translateY(-6px) scale(1.02);
 }
 .book-card:active {
-  transform: translateY(-4px) scale(0.985);
+  transform: translateY(-2px) scale(0.99);
 }
 .book-media {
-  position: relative;
-  width: calc(var(--book-size) * 0.88);
-  height: calc(var(--book-size) * 0.88);
-  max-width: 100%;
-  aspect-ratio: 1 / 1;
+  width: var(--book-size);
+  height: var(--book-size);
+  flex-shrink: 0;
   display: grid;
   place-items: center;
-  margin-bottom: clamp(0.2rem, 1dvh, 0.65rem);
   z-index: 1;
-  flex-shrink: 0;
 }
 .book-media video {
   width: 100%;
@@ -174,18 +173,20 @@ body.second-screen-active .book-card-4 {
     filter 0.45s ease;
 }
 .book-card:hover .book-media video {
-  transform: scale(1.08) rotate(-1deg);
+  transform: scale(1.06) rotate(-1deg);
   filter:
     drop-shadow(0 26px 34px rgba(0, 0, 0, 0.28))
     contrast(1.12);
 }
 .book-name {
-  position: relative;
-  z-index: 1;
   width: 100%;
-  max-width: var(--book-size);
-  font-size: clamp(0.65rem, calc(var(--book-size) * 0.1), 1.5rem);
-  line-height: 1.15;
+  height: var(--name-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: clamp(0.6rem, calc(var(--book-size) * 0.095), 1.25rem);
+  line-height: 1.1;
   text-align: center;
   font-weight: 800;
   letter-spacing: -0.04em;
@@ -194,13 +195,11 @@ body.second-screen-active .book-card-4 {
   opacity: 0.78;
   transition:
     opacity 0.35s ease,
-    transform 0.35s cubic-bezier(0.65, 0, 0.35, 1),
-    letter-spacing 0.35s ease;
+    transform 0.35s cubic-bezier(0.65, 0, 0.35, 1);
 }
 .book-card:hover .book-name {
   opacity: 1;
-  transform: translateY(4px);
-  letter-spacing: 0.02em;
+  transform: translateY(2px);
 }
 @keyframes floatBookOne {
   0%, 100% { translate: 0 0; }
@@ -208,30 +207,15 @@ body.second-screen-active .book-card-4 {
 }
 @keyframes floatBookTwo {
   0%, 100% { translate: 0 0; }
-  50% { translate: var(--float-offset) calc(var(--float-offset) * -1.3); }
+  50% { translate: var(--float-offset) calc(var(--float-offset) * -1); }
 }
 @keyframes floatBookThree {
   0%, 100% { translate: 0 0; }
-  50% { translate: calc(var(--float-offset) * -1) calc(var(--float-offset) * -1.15); }
+  50% { translate: calc(var(--float-offset) * -1) calc(var(--float-offset) * -1); }
 }
 @keyframes floatBookFour {
   0%, 100% { translate: 0 0; }
-  50% { translate: calc(var(--float-offset) * 0.75) calc(var(--float-offset) * -0.85); }
-}
-/* Pantallas muy anchas: un poco más de aprovechamiento */
-@media (min-width: 1400px) and (min-height: 800px) {
-  .second-screen {
-    --book-size: min(var(--cell-w) * 0.92, var(--cell-h) * 0.88, 420px);
-  }
-}
-/* Landscape bajo: reducir para que quepan 2 filas sin scroll excesivo */
-@media (max-height: 520px) and (orientation: landscape) {
-  .second-screen {
-    --pad-block: clamp(0.5rem, 2dvh, 1.25rem);
-    --name-height: clamp(0.9rem, 2.5dvh, 1.5rem);
-    --book-size: min(var(--cell-w) * 0.82, var(--cell-h) * 0.78, 200px);
-    --book-size: max(var(--book-size), 48px);
-  }
+  50% { translate: calc(var(--float-offset) * 0.5) calc(var(--float-offset) * -0.8); }
 }
 body.second-screen-active .animated-title {
   opacity: 0;
